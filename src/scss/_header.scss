@@ -1,0 +1,32 @@
+.header {
+  &__appname {
+    a {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $primary;
+
+      @include breakpoint-up(medium) {
+        font-size: 1.875rem;
+      }
+    }
+  }
+
+  &__links {
+    img {
+      width: 1.5625rem;
+
+      @include breakpoint-up(medium) {
+        width: 2.5rem;
+      }
+    }
+
+    a:first-child {
+      margin-right: 1.5625rem;
+    }
+  }
+
+  nav {
+    padding-top: 1.0625rem;
+    padding-bottom: 1.0625rem;
+  }
+}

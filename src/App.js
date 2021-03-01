@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import githubLogo from './images/github.svg';
+import twitterLogo from './images/twitter.svg';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <>
+      <header className="header">
+        <nav className="container container--px flex flex-jc-sb flex-ai-c">
+          <div className="header__appname">
+            <a href="/">HappyGiving</a>
+          </div>
+          <div className="header__links">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://github.com/nazifbara"
+            >
+              <img alt="github logo" src={githubLogo} />
+            </a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://twitter.com/zifkage"
+            >
+              <img alt="twitter logo" src={twitterLogo} />
+            </a>
+          </div>
+        </nav>
       </header>
-    </div>
+    </>
   );
 }
 
