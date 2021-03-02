@@ -39,6 +39,18 @@ function App() {
           </p>
         </div>
       </section>
+      <section className="search container container--pall">
+        <form>
+          <label htmlFor="criteria">Choose a search criteria</label>
+          <select>
+            <option>----------</option>
+            <option>Theme</option>
+            <option>Organization home country</option>
+            <option>Country served</option>
+          </select>
+          <button className="button">Search</button>
+        </form>
+      </section>
     </>
   );
 }
