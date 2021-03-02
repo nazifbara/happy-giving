@@ -27,6 +27,18 @@ function App() {
           </div>
         </nav>
       </header>
+
+      <section className="hero">
+        <div className="hero__image"></div>
+        <div className="hero__text container container--px">
+          <h1>Find a charity</h1>
+          <p>
+            Charity is the most generous thing we can do in our lives. A helping
+            hand to those in need will always bless you. Don’t shy away from
+            giving, price doesn’t matter. What matters is how big is your heart.
+          </p>
+        </div>
+      </section>
     </>
   );
 }
