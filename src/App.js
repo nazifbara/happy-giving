@@ -1,7 +1,17 @@
 import githubLogo from './images/github.svg';
 import twitterLogo from './images/twitter.svg';
 
+import { useEffect } from 'react';
+
+import { fetchAllProjects } from './api';
+import useAsync from './use-async';
+
 function App() {
+  const { status, data, run } = useAsync();
+  useEffect(() => {
+    run(fetchAllProjects());
+  }, [run]);
+
   return (
     <>
       <header className="header">
@@ -50,6 +60,29 @@ function App() {
           </select>
           <button className="button">Search</button>
         </form>
+      </section>
+
+      <section className="container container--pall">
+        <div className="card__grid">
+          {status === 'pending' && <span>loading</span>}
+          {status === 'resolved' &&
+            data.projects.project.map((p) => (
+              <a
+                key={`project-${p.id}`}
+                href={p.projectLink}
+                target="_blank"
+                rel="noreferrer"
+                className="card"
+              >
+                <div className="flex flex-ai-c">
+                  <img className="card__image" alt="" src={p.imageLink} />
+                  <span className="card_title">{p.title}</span>
+                </div>
+
+                <p className="card__body">{p.summary}</p>
+              </a>
+            ))}
+        </div>
       </section>
     </>
   );

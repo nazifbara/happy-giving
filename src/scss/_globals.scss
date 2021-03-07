@@ -24,6 +24,10 @@ body {
   }
 }
 
+img {
+  width: 100%;
+}
+
 // Text
 h1 {
   font-size: 2.25rem;
@@ -53,9 +57,9 @@ a:hover {
   }
 
   &--pall {
-    padding-top: 3.125rem;
+    padding-top: 1.5625rem;
     padding-right: 1.25rem;
-    padding-bottom: 3.125rem;
+    padding-bottom: 1.5625rem;
     padding-left: 1.25rem;
   }
 }
