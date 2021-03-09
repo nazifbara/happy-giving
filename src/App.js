@@ -1,16 +1,25 @@
 import githubLogo from './images/github.svg';
 import twitterLogo from './images/twitter.svg';
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
-import { fetchAllProjects } from './api';
+import SearchForm from './SearchForm';
+import { fetchAllProjects, searchProjects } from './api';
 import useAsync from './use-async';
 
 function App() {
-  const { status, data, run } = useAsync();
+  const { status, data, run, error } = useAsync();
+
   useEffect(() => {
     run(fetchAllProjects());
   }, [run]);
+
+  const onSearch = useCallback(
+    (option) => {
+      run(searchProjects(option));
+    },
+    [run]
+  );
 
   return (
     <>
@@ -50,23 +59,19 @@ function App() {
         </div>
       </section>
       <section className="search container container--pall">
-        <form>
-          <label htmlFor="criteria">Choose a search criteria</label>
-          <select>
-            <option>----------</option>
-            <option>Theme</option>
-            <option>Organization home country</option>
-            <option>Country served</option>
-          </select>
-          <button className="button">Search</button>
-        </form>
+        <SearchForm isLoading={status === 'pending'} onSearch={onSearch} />
       </section>
-
+      {error && (
+        <span className="error-message">
+          {error.message === 'Network Error'
+            ? 'Check your internet connection'
+            : 'Something went wrong...'}
+        </span>
+      )}
       <section className="container container--pall">
         <div className="card__grid">
-          {status === 'pending' && <span>loading</span>}
           {status === 'resolved' &&
-            data.projects.project.map((p) => (
+            data.project.map((p) => (
               <a
                 key={`project-${p.id}`}
                 href={p.projectLink}
