@@ -21,16 +21,16 @@ async function fetchThemes() {
   return result.data.themes;
 }
 
-async function searchProjects({ criterion, term }) {
-  if (criterion === 'all projects') {
+async function searchProjects(option) {
+  if (option.criterion === 'all projects') {
     return fetchAllProjects();
-  } else if (criterion === 'theme') {
-    return fetchProjectByTheme(term);
+  } else {
+    return fetchProjectsByCriterion(option);
   }
 }
 
-async function fetchProjectByTheme(theme) {
-  let url = `${BASE_URL}/themes/${theme}/projects/active?api_key=${API_KEY}`;
+async function fetchProjectsByCriterion({ criterion, term }) {
+  let url = `${BASE_URL}/${criterion}/${term}/projects/active?api_key=${API_KEY}`;
   const result = await axios.get(url, { headers: HEADERS });
   return result.data.projects;
 }

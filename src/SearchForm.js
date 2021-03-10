@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 
 import useAsync from './use-async';
 import { fetchThemes } from './api';
+import countryCodes from './country-codes';
 
 const CRITERIA = {
   allProjects: 'all projects',
-  theme: 'theme',
+  theme: 'themes',
+  countryServed: 'countries',
 };
 
 function SearchForm({ onSearch, isLoading }) {
@@ -35,10 +37,9 @@ function SearchForm({ onSearch, isLoading }) {
     <form>
       <label htmlFor="criterion">Choose a search criterion</label>
       <select value={criterion} onChange={onCriterionChange}>
-        <option value="all projects">All projects</option>
-        <option value="theme">Theme</option>
-        <option value="home country">Organization home country</option>
-        <option value="country served">Country served</option>
+        <option value={CRITERIA.allProjects}>All projects</option>
+        <option value={CRITERIA.theme}>Theme</option>
+        <option value={CRITERIA.countryServed}>Country served</option>
       </select>
       {status === 'pending' && <img className="spinner" alt="" src={spinner} />}
       {criterion === CRITERIA.theme && status === 'resolved' && (
@@ -49,6 +50,19 @@ function SearchForm({ onSearch, isLoading }) {
             {data.theme.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
+      {criterion === CRITERIA.countryServed && (
+        <>
+          <label htmlFor="theme">Choose a country</label>
+          <select value={searchTerm} onChange={onSearchTermChange}>
+            <option value={''}>----------</option>
+            {Object.entries(countryCodes).map((c) => (
+              <option key={c[0]} value={c[0]}>
+                {c[1]}
               </option>
             ))}
           </select>
