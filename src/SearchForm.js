@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import useAsync from './use-async';
 import { fetchThemes } from './api';
 import countryCodes from './country-codes';
+import Button from './Button';
 
 const CRITERIA = {
   allProjects: 'all projects',
@@ -68,20 +69,16 @@ function SearchForm({ onSearch, isLoading }) {
           </select>
         </>
       )}
-      <button
+      <Button
         disabled={criterion !== CRITERIA.allProjects && searchTerm === ''}
         onClick={(e) => {
           e.preventDefault();
           onSearch({ criterion, term: searchTerm });
         }}
-        className="button"
+        isLoading={isLoading}
       >
-        {isLoading ? (
-          <img className="spinner" alt="" src={spinner} />
-        ) : (
-          'Search'
-        )}
-      </button>
+        Search
+      </Button>
     </form>
   );
 }

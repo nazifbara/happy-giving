@@ -10,9 +10,16 @@ const HEADERS = {
 
 async function fetchAllProjects(nextId) {
   let url = `${BASE_URL}/all/projects/active?api_key=${API_KEY}`;
-  url = nextId ? `${url}&nextProject=${nextId}` : url;
-  const result = await axios.get(url, { headers: HEADERS });
-  return result.data.projects;
+  url = nextId ? `${url}&nextProjectId=${nextId}` : url;
+  const {
+    data: { projects },
+  } = await axios.get(url, { headers: HEADERS });
+  return {
+    fetchMore: projects.hasNext
+      ? () => fetchAllProjects(projects.nextProjectId)
+      : null,
+    ...projects,
+  };
 }
 
 async function fetchThemes() {
@@ -29,10 +36,19 @@ async function searchProjects(option) {
   }
 }
 
-async function fetchProjectsByCriterion({ criterion, term }) {
+async function fetchProjectsByCriterion({ criterion, term }, nextId) {
   let url = `${BASE_URL}/${criterion}/${term}/projects/active?api_key=${API_KEY}`;
-  const result = await axios.get(url, { headers: HEADERS });
-  return result.data.projects;
+  url = nextId ? `${url}&nextProjectId=${nextId}` : url;
+  const {
+    data: { projects },
+  } = await axios.get(url, { headers: HEADERS });
+  return {
+    fetchMore: projects.hasNext
+      ? () =>
+          fetchProjectsByCriterion({ criterion, term }, projects.nextProjectId)
+      : null,
+    ...projects,
+  };
 }
 
 export { fetchAllProjects, fetchThemes, searchProjects };
