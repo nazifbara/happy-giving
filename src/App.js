@@ -91,7 +91,7 @@ function App() {
             <a
               target="_blank"
               rel="noreferrer"
-              href="https://twitter.com/zifkage"
+              href="https://twitter.com/nazifbara"
             >
               <img alt="twitter logo" src={twitterLogo} />
             </a>
