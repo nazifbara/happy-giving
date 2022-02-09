@@ -1,11 +1,31 @@
-import githubLogo from './images/github.svg';
-import twitterLogo from './images/twitter.svg';
-
 import { useEffect, useCallback, useReducer } from 'react';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  Link,
+  Container,
+  Button,
+  CircularProgress,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActionArea,
+  Grid,
+  Alert,
+} from '@mui/material';
+import styled from '@emotion/styled';
 
-import SearchForm from './SearchForm';
+import HeroJPG from './assets/hero.jpg';
+import SearchForm from './components/SearchForm';
 import { fetchAllProjects, searchProjects } from './api';
-import Button from './Button';
+
+const HeroImg = styled.img`
+  margin-top: 20px;
+  border-radius: 10px;
+  width: 100%;
+`;
 
 function appReducer(state, action) {
   switch (action.type) {
@@ -36,6 +56,12 @@ function App() {
     data: null,
     error: null,
   });
+
+  const isResolved = status === 'resolved';
+  const isFetching = status === 'fetching';
+  const isFetchingMore = status === 'fetching more';
+  const isError = Boolean(error);
+  const isFound = data && data.numberFound > 0;
 
   useEffect(() => {
     dispatch({ type: 'FETCH_INIT' });
@@ -75,82 +101,126 @@ function App() {
 
   return (
     <>
-      <header className="header">
-        <nav className="container container--px flex flex-jc-sb flex-ai-c">
-          <div className="header__appname">
-            <a href="/">HappyGiving</a>
-          </div>
-          <div className="header__links">
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href="https://github.com/nazifbara"
-            >
-              <img alt="github logo" src={githubLogo} />
-            </a>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href="https://twitter.com/nazifbara"
-            >
-              <img alt="twitter logo" src={twitterLogo} />
-            </a>
-          </div>
-        </nav>
-      </header>
-
-      <section className="hero">
-        <div className="hero__image"></div>
-        <div className="hero__text container container--px">
-          <h1>Find a charity</h1>
-          <p>
-            Charity is the most generous thing we can do in our lives. A helping
-            hand to those in need will always bless you. Don’t shy away from
-            giving, price doesn’t matter. What matters is how big is your heart.
-          </p>
-        </div>
-      </section>
-      <section className="search container container--pall">
-        <SearchForm isLoading={status === 'fetching'} onSearch={onSearch} />
-      </section>
-      {error && (
-        <span className="error-message">
-          {error.message === 'Network Error'
-            ? 'Check your internet connection'
-            : 'Something went wrong...'}
-        </span>
-      )}
-      <section className="container container--pall">
-        <div className="card__grid">
-          {(status === 'resolved' || status === 'fetching more') &&
-            data.project.map((p) => (
-              <a
-                key={`project-${p.id}`}
-                href={p.projectLink}
-                target="_blank"
-                rel="noreferrer"
-                className="card"
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" sx={{ bgcolor: 'background.default' }}>
+          <Container maxWidth="lg">
+            <Toolbar disableGutters>
+              <Typography variant="h4" component="div">
+                <Link color="text.primary" underline="none" href="/">
+                  HappyGiving
+                </Link>
+              </Typography>
+            </Toolbar>
+          </Container>
+        </AppBar>
+      </Box>
+      <main>
+        <Container maxWidth="lg">
+          <section>
+            <Container disableGutters maxWidth="lg">
+              <HeroImg src={HeroJPG} alt="" />
+            </Container>
+            <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+              <Typography
+                sx={{ marginTop: '10px', marginBottom: '10px' }}
+                variant="h2"
+                component="h1"
               >
-                <div className="flex flex-ai-c">
-                  <img className="card__image" alt="" src={p.imageLink} />
-                  <span className="card_title">{p.title}</span>
-                </div>
+                Find a charity
+              </Typography>
+              <Container maxWidth="sm" sx={{ textAlign: 'center' }}>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  component="p"
+                >
+                  Charity is the most generous thing we can do in our lives. A
+                  helping hand to those in need will always bless you. Don’t shy
+                  away from giving, price doesn’t matter. What matters is how
+                  big is your heart.
+                </Typography>
+              </Container>
+            </Container>
+          </section>
+          <Container disableGutters maxWidth="sm" sx={{ my: '50px' }}>
+            <SearchForm isLoading={isFetching} onSearch={onSearch} />
+          </Container>
 
-                <p className="card__body">{p.summary}</p>
-              </a>
-            ))}
-        </div>
-        {data && data.fetchMore && (
-          <Button
-            isLoading={status === 'fetching more'}
-            type="outlined"
-            onClick={fetchMore}
-            style={{ margin: '0 auto', display: 'block' }}
-          >
-            Show more
-          </Button>
-        )}
-      </section>
+          <section>
+            <Container disableGutters maxWidth="md">
+              {!isFound && !isFetching && !isError && (
+                <Alert variant="filled" severity="warning">
+                  No projects found
+                </Alert>
+              )}
+              {isError && (
+                <Alert variant="filled" severity="error">
+                  {error.message === 'Network Error'
+                    ? 'Please check your internet connection and refresh the page'
+                    : 'Something went wrong...'}
+                </Alert>
+              )}
+            </Container>
+            <Grid
+              sx={{ mb: '50px' }}
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 1, sm: 8, md: 12 }}
+            >
+              {(isResolved || isFetchingMore) &&
+                isFound &&
+                data.project.map((p) => (
+                  <Grid item xs={1} sm={4} key={`project-${p.id}`}>
+                    <CardActionArea sx={{ height: '100%' }}>
+                      <Card
+                        sx={{ bgcolor: 'background.default', height: '100%' }}
+                      >
+                        <Link
+                          underline="none"
+                          href={p.projectLink}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <CardMedia
+                            component="img"
+                            height="140"
+                            image={p.image.imagelink[4].url}
+                            alt={p.title}
+                          />
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="div"
+                            >
+                              {p.title}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {p.summary.substring(0, 250)}...
+                            </Typography>
+                          </CardContent>
+                        </Link>
+                      </Card>
+                    </CardActionArea>
+                  </Grid>
+                ))}
+            </Grid>
+            {data && data.fetchMore && (
+              <Container sx={{ mb: '50px' }} maxWidth="xs">
+                <Button
+                  fullWidth
+                  disabled={isFetchingMore}
+                  variant="contained"
+                  size="large"
+                  onClick={fetchMore}
+                >
+                  {isFetchingMore ? <CircularProgress /> : 'More projects'}
+                </Button>
+              </Container>
+            )}
+          </section>
+        </Container>
+      </main>
     </>
   );
 }

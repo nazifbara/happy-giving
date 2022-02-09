@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-import API_KEY from './apiKey';
-
+const API_KEY = process.env.REACT_APP_GG_API_KEY;
 const BASE_URL = 'https://api.globalgiving.org/api/public/projectservice';
 const HEADERS = {
   accept: 'application/json',
