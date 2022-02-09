@@ -1,21 +1,21 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-happygiving-dev-153911-authRole",
-            "UnauthRoleArn": "arn:aws:iam::070468362108:role/amplify-happygiving-dev-153911-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::070468362108:role/amplify-happygiving-dev-153911-authRole",
+            "AuthRoleName": "amplify-happygiving-dev-212828-authRole",
+            "UnauthRoleArn": "arn:aws:iam::070468362108:role/amplify-happygiving-dev-212828-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::070468362108:role/amplify-happygiving-dev-212828-authRole",
             "Region": "eu-west-2",
-            "DeploymentBucketName": "amplify-happygiving-dev-153911-deployment",
-            "UnauthRoleName": "amplify-happygiving-dev-153911-unauthRole",
-            "StackName": "amplify-happygiving-dev-153911",
-            "StackId": "arn:aws:cloudformation:eu-west-2:070468362108:stack/amplify-happygiving-dev-153911/0d90c750-84d3-11eb-9349-0aad3f630dbc",
-            "AmplifyAppId": "d4uju28w4eeto"
+            "DeploymentBucketName": "amplify-happygiving-dev-212828-deployment",
+            "UnauthRoleName": "amplify-happygiving-dev-212828-unauthRole",
+            "StackName": "amplify-happygiving-dev-212828",
+            "StackId": "arn:aws:cloudformation:eu-west-2:070468362108:stack/amplify-happygiving-dev-212828/dae7caf0-89e6-11ec-bbb2-020fe4d049ee",
+            "AmplifyAppId": "d1okkxbs75qrgk"
         },
         "categories": {
             "hosting": {
                 "amplifyhosting": {
-                    "appId": "d4uju28w4eeto",
-                    "type": "manual"
+                    "appId": "d1okkxbs75qrgk",
+                    "type": "cicd"
                 }
             }
         }
