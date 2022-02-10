@@ -1,31 +1,15 @@
 import { useEffect, useCallback, useReducer } from 'react';
 import {
-  Box,
-  AppBar,
-  Toolbar,
   Typography,
-  Link,
   Container,
   Button,
   CircularProgress,
-  Card,
-  CardContent,
-  CardMedia,
-  CardActionArea,
-  Grid,
   Alert,
 } from '@mui/material';
-import styled from '@emotion/styled';
 
 import HeroJPG from './assets/hero.jpg';
-import SearchForm from './components/SearchForm';
+import { SearchForm, AppBar, Cover, ProjectsGrid } from './components';
 import { fetchAllProjects, searchProjects } from './api';
-
-const HeroImg = styled.img`
-  margin-top: 20px;
-  border-radius: 10px;
-  width: 100%;
-`;
 
 function appReducer(state, action) {
   switch (action.type) {
@@ -101,24 +85,12 @@ function App() {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" sx={{ bgcolor: 'background.default' }}>
-          <Container maxWidth="lg">
-            <Toolbar disableGutters>
-              <Typography variant="h4" component="div">
-                <Link color="text.primary" underline="none" href="/">
-                  HappyGiving
-                </Link>
-              </Typography>
-            </Toolbar>
-          </Container>
-        </AppBar>
-      </Box>
+      <AppBar />
       <main>
         <Container maxWidth="lg">
           <section>
             <Container disableGutters maxWidth="lg">
-              <HeroImg src={HeroJPG} alt="" />
+              <Cover src={HeroJPG} alt="" />
             </Container>
             <Container maxWidth="md" sx={{ textAlign: 'center' }}>
               <Typography
@@ -161,50 +133,10 @@ function App() {
                 </Alert>
               )}
             </Container>
-            <Grid
-              sx={{ mb: '50px' }}
-              container
-              spacing={{ xs: 2, md: 3 }}
-              columns={{ xs: 1, sm: 8, md: 12 }}
-            >
-              {(isResolved || isFetchingMore) &&
-                isFound &&
-                data.project.map((p) => (
-                  <Grid item xs={1} sm={4} key={`project-${p.id}`}>
-                    <CardActionArea sx={{ height: '100%' }}>
-                      <Card
-                        sx={{ bgcolor: 'background.default', height: '100%' }}
-                      >
-                        <Link
-                          underline="none"
-                          href={p.projectLink}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <CardMedia
-                            component="img"
-                            height="140"
-                            image={p.image.imagelink[4].url}
-                            alt={p.title}
-                          />
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="div"
-                            >
-                              {p.title}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {p.summary.substring(0, 250)}...
-                            </Typography>
-                          </CardContent>
-                        </Link>
-                      </Card>
-                    </CardActionArea>
-                  </Grid>
-                ))}
-            </Grid>
+            {(isResolved || isFetchingMore) && isFound && (
+              <ProjectsGrid projects={data.project} />
+            )}
+
             {data && data.fetchMore && (
               <Container sx={{ mb: '50px' }} maxWidth="xs">
                 <Button
