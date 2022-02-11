@@ -9,7 +9,7 @@ import {
 
 import HeroJPG from './assets/hero.jpg';
 import { SearchForm, AppBar, Cover, ProjectsGrid } from './components';
-import { fetchAllProjects, searchProjects } from './api';
+import { fetchProjects } from './client';
 
 function appReducer(state, action) {
   switch (action.type) {
@@ -49,7 +49,7 @@ function App() {
 
   useEffect(() => {
     dispatch({ type: 'FETCH_INIT' });
-    fetchAllProjects().then(
+    fetchProjects().then(
       (data) => {
         dispatch({ type: 'FETCH_SUCCESS', data });
       },
@@ -61,7 +61,7 @@ function App() {
 
   const onSearch = useCallback((option) => {
     dispatch({ type: 'FETCH_INIT' });
-    searchProjects(option).then(
+    fetchProjects(null, option).then(
       (data) => {
         dispatch({ type: 'FETCH_SUCCESS', data });
       },

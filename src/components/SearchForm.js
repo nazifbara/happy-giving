@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 
 import useAsync from '../use-async';
-import { fetchThemes } from '../api';
+import { fetchThemes } from '../client';
 import countryCodes from '../country-codes';
 
 const CRITERIA = {
@@ -29,7 +29,7 @@ function SearchForm({ onSearch, isLoading }) {
     if (criterion === CRITERIA.theme) {
       run(fetchThemes());
     } else if (criterion === CRITERIA.allProjects) {
-      onSearch({ criterion });
+      onSearch();
     }
   }, [run, criterion, onSearch]);
 
