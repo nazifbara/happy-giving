@@ -6,10 +6,10 @@ import {
   MenuItem,
   Button,
   CircularProgress,
+  Alert,
 } from '@mui/material';
 
-import useAsync from '../use-async';
-import { fetchThemes } from '../client';
+import { useThemes } from '../hooks';
 import countryCodes from '../country-codes';
 
 const CRITERIA = {
@@ -19,19 +19,15 @@ const CRITERIA = {
 };
 
 function SearchForm({ onSearch, isLoading }) {
-  const { status, data, run } = useAsync();
+  const { data, isFetching, isSuccess, isError } = useThemes();
   const [criterion, setCriterion] = useState(CRITERIA.allProjects);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const isPending = status === 'pending';
-
   useEffect(() => {
-    if (criterion === CRITERIA.theme) {
-      run(fetchThemes());
-    } else if (criterion === CRITERIA.allProjects) {
-      onSearch();
+    if (criterion === CRITERIA.allProjects) {
+      onSearch({ criterion });
     }
-  }, [run, criterion, onSearch]);
+  }, [criterion, onSearch]);
 
   function onCriterionChange(e) {
     setCriterion(e.target.value);
@@ -44,6 +40,12 @@ function SearchForm({ onSearch, isLoading }) {
   return (
     <form>
       <FormControl margin="normal" fullWidth>
+        {isFetching && <CircularProgress />}
+        {isError && (
+          <Alert variant="filled" severity="error">
+            Error fetching the themes...
+          </Alert>
+        )}
         <InputLabel id="criterion-label">Choose a search criterion</InputLabel>
         <Select
           labelId="criterion-label"
@@ -56,8 +58,7 @@ function SearchForm({ onSearch, isLoading }) {
           <MenuItem value={CRITERIA.theme}>Theme</MenuItem>
           <MenuItem value={CRITERIA.countryServed}>Country served</MenuItem>
         </Select>
-        {isPending && <CircularProgress />}
-        {criterion === CRITERIA.theme && status === 'resolved' && (
+        {criterion === CRITERIA.theme && isSuccess && (
           <FormControl margin="normal">
             <InputLabel id="theme-label">Choose a theme</InputLabel>
             <Select

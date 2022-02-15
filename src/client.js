@@ -9,7 +9,7 @@ const HEADERS = {
   'content-type': 'application/json',
 };
 
-async function fetchProjects(
+export async function fetchProjects(
   nextId,
   option = { criterion: CRITERIA.allProjects }
 ) {
@@ -21,25 +21,29 @@ async function fetchProjects(
     url = `${BASE_URL}/${option.criterion}/${option.term}/projects/active?api_key=${API_KEY}`;
   }
 
-  console.log(nextId);
-
   url = nextId ? `${url}&nextProjectId=${nextId}` : url;
 
   const {
     data: { projects },
   } = await axios.get(url, { headers: HEADERS });
+
+  if (projects.numberFound === 0) {
+    return {
+      nextProjectId: null,
+      projects: [],
+    };
+  }
+
+  const { nextProjectId, project } = projects;
+
   return {
-    fetchMore: projects.hasNext
-      ? () => fetchProjects(projects.nextProjectId, option)
-      : null,
-    ...projects,
+    nextProjectId: nextProjectId,
+    projects: project,
   };
 }
 
-async function fetchThemes() {
+export async function fetchThemes() {
   let url = `${BASE_URL}/themes?api_key=${API_KEY}`;
   const result = await axios.get(url, { headers: HEADERS });
   return result.data.themes;
 }
-
-export { fetchProjects, fetchThemes };

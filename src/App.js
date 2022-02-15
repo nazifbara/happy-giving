@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useReducer } from 'react';
+import { useCallback } from 'react';
 import {
   Typography,
   Container,
@@ -9,79 +9,22 @@ import {
 
 import HeroJPG from './assets/hero.jpg';
 import { SearchForm, AppBar, Cover, ProjectsGrid } from './components';
-import { fetchProjects } from './client';
-
-function appReducer(state, action) {
-  switch (action.type) {
-    case 'FETCH_INIT':
-      return { status: 'fetching', data: null, error: null };
-    case 'FETCH_MORE_INIT':
-      return { ...state, status: 'fetching more', error: null };
-    case 'FETCH_SUCCESS':
-      return { status: 'resolved', data: action.data, error: null };
-    case 'FETCH_MORE_SUCCESS':
-      return {
-        status: 'resolved',
-        data: {
-          ...action.data,
-          project: [...state.data.project, ...action.data.project],
-        },
-      };
-    case 'FETCH_FAILURE':
-      return { ...state, status: 'rejected', error: action.error };
-    default:
-      break;
-  }
-}
+import { useProjects } from './hooks';
 
 function App() {
-  const [{ status, data, error }, dispatch] = useReducer(appReducer, {
-    status: 'idle',
-    data: null,
-    error: null,
-  });
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetching,
+    isFetchingNextPage,
+    isFound,
+    isSuccess,
+    isError,
+    setSearchOption,
+  } = useProjects();
 
-  const isResolved = status === 'resolved';
-  const isFetching = status === 'fetching';
-  const isFetchingMore = status === 'fetching more';
-  const isError = Boolean(error);
-  const isFound = data && data.numberFound > 0;
-
-  useEffect(() => {
-    dispatch({ type: 'FETCH_INIT' });
-    fetchProjects().then(
-      (data) => {
-        dispatch({ type: 'FETCH_SUCCESS', data });
-      },
-      (error) => {
-        dispatch({ type: 'FETCH_FAILURE', error });
-      }
-    );
-  }, []);
-
-  const onSearch = useCallback((option) => {
-    dispatch({ type: 'FETCH_INIT' });
-    fetchProjects(null, option).then(
-      (data) => {
-        dispatch({ type: 'FETCH_SUCCESS', data });
-      },
-      (error) => {
-        dispatch({ type: 'FETCH_FAILURE', error });
-      }
-    );
-  }, []);
-
-  function fetchMore() {
-    dispatch({ type: 'FETCH_MORE_INIT' });
-    data.fetchMore().then(
-      (data) => {
-        dispatch({ type: 'FETCH_MORE_SUCCESS', data });
-      },
-      (error) => {
-        dispatch({ type: 'FETCH_FAILURE', error });
-      }
-    );
-  }
+  const onSearch = useCallback(setSearchOption, [setSearchOption]);
 
   return (
     <>
@@ -120,33 +63,31 @@ function App() {
 
           <section>
             <Container disableGutters maxWidth="md">
-              {!isFound && !isFetching && !isError && (
+              {!isFound && !isFetching && (
                 <Alert variant="filled" severity="warning">
                   No projects found
                 </Alert>
               )}
               {isError && (
                 <Alert variant="filled" severity="error">
-                  {error.message === 'Network Error'
-                    ? 'Please check your internet connection and refresh the page'
-                    : 'Something went wrong...'}
+                  Something went wrong...
                 </Alert>
               )}
             </Container>
-            {(isResolved || isFetchingMore) && isFound && (
-              <ProjectsGrid projects={data.project} />
+            {(isSuccess || isFetchingNextPage) && isFound && (
+              <ProjectsGrid projects={data} />
             )}
 
-            {data && data.fetchMore && (
+            {hasNextPage && (
               <Container sx={{ mb: '50px' }} maxWidth="xs">
                 <Button
                   fullWidth
-                  disabled={isFetchingMore}
+                  disabled={isFetchingNextPage}
                   variant="contained"
                   size="large"
-                  onClick={fetchMore}
+                  onClick={fetchNextPage}
                 >
-                  {isFetchingMore ? <CircularProgress /> : 'More projects'}
+                  {isFetchingNextPage ? <CircularProgress /> : 'More projects'}
                 </Button>
               </Container>
             )}

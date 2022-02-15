@@ -1,16 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import App from './App';
 import theme from './theme';
 import reportWebVitals from './reportWebVitals';
 
+const queryClient = new QueryClient();
+
 const Root = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 };
