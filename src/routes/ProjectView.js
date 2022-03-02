@@ -12,7 +12,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 
-import { useProject } from '../hooks';
+import { useProject, useGallery } from '../hooks';
 import { dollarFormat } from '../utils';
 
 function ProjectView() {
@@ -60,7 +60,7 @@ function ProjectView() {
               <ProjectStory project={project} />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-              Project Photos
+              <ProjectGallery projectId={project.id} />
             </TabPanel>
           </Paper>
         </Stack>
@@ -111,6 +111,13 @@ function Stats({ project }) {
       </Stack>
     </Box>
   );
+}
+
+function ProjectGallery({ projectId }) {
+  const { data: images } = useGallery(projectId);
+  console.log({ images });
+
+  return <h1>Gallery</h1>;
 }
 
 function ProjectStory({ project }) {
