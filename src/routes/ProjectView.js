@@ -1,5 +1,9 @@
+import { useParams } from 'react-router-dom';
+
 function ProjectView() {
-  return <h1>Project View</h1>;
+  const { projectId } = useParams();
+
+  return <h1>Project {projectId}</h1>;
 }
 
 const route = {
