@@ -1,19 +1,19 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { AppBar } from './components';
+import { AppBar, ContentBox } from './components';
 import routes from './routes';
 
 function App() {
   return (
     <>
       <AppBar />
-      <main>
+      <ContentBox>
         <Routes>
           {routes.map((r) => (
             <Route key={r.name} {...r.props} />
           ))}
         </Routes>
-      </main>
+      </ContentBox>
     </>
   );
 }
