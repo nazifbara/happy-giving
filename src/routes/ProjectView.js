@@ -10,6 +10,7 @@ import {
   Box,
   Paper,
   LinearProgress,
+  Grid,
 } from '@mui/material';
 
 import { useProject, useGallery } from '../hooks';
@@ -22,7 +23,6 @@ function ProjectView() {
   const handleTabChange = (e, newValue) => setTabValue(newValue);
 
   const { data: project, isSuccess, isLoading } = useProject(projectId);
-  console.log({ project });
 
   return (
     <Container disableGutters maxWidth="md">
@@ -114,10 +114,27 @@ function Stats({ project }) {
 }
 
 function ProjectGallery({ projectId }) {
-  const { data: images } = useGallery(projectId);
-  console.log({ images });
+  const { data: images, isLoading, isSuccess } = useGallery(projectId);
 
-  return <h1>Gallery</h1>;
+  return (
+    <>
+      {isLoading && <CircularProgress />}
+      {isSuccess && (
+        <Grid
+          container
+          alignItems="center"
+          spacing={2}
+          columns={{ xs: 2, sm: 4, lg: 12 }}
+        >
+          {images.map((img) => (
+            <Grid item xs={2} sm={2} lg={4} key={img.id}>
+              <img src={`${img.imagelink[3].url}`} alt="" />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </>
+  );
 }
 
 function ProjectStory({ project }) {

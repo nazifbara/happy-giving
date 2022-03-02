@@ -16,7 +16,7 @@ export async function fetchGallery(projectId) {
       headers: HEADERS,
     }
   );
-  return data?.images?.image;
+  return data?.images?.image.slice(1);
 }
 
 export async function fetchSpecificProject(projectId) {
