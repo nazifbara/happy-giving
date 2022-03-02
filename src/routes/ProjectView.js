@@ -9,9 +9,11 @@ import {
   Tab,
   Box,
   Paper,
+  LinearProgress,
 } from '@mui/material';
 
 import { useProject } from '../hooks';
+import { dollarFormat } from '../utils';
 
 function ProjectView() {
   const { projectId } = useParams();
@@ -23,14 +25,14 @@ function ProjectView() {
   console.log({ project });
 
   return (
-    <Container maxWidth="md">
+    <Container disableGutters maxWidth="md">
       {isLoading && <CircularProgress />}
 
       {isSuccess && (
-        <Stack spacing={3}>
+        <Stack alignItems="center" spacing={3}>
           <Typography
             color="primary"
-            variant="h3"
+            variant="h4"
             component="h1"
             textAlign="center"
           >
@@ -39,14 +41,23 @@ function ProjectView() {
 
           <img src={project.image.imagelink[4].url} alt="" />
 
+          <Stats project={project} />
+
           <Tabs value={tabValue} onChange={handleTabChange} centered>
             <Tab label="Story" />
             <Tab label="Photos" />
           </Tabs>
 
-          <Paper sx={{ px: 3, py: 4 }}>
+          <Paper
+            elevation={3}
+            sx={{
+              width: '100%',
+              p: { xs: 2, sm: 3 },
+              py: { xs: 3, sm: 4 },
+            }}
+          >
             <TabPanel value={tabValue} index={0}>
-              Project Story
+              <ProjectStory project={project} />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
               Project Photos
@@ -55,6 +66,81 @@ function ProjectView() {
         </Stack>
       )}
     </Container>
+  );
+}
+
+function Stats({ project }) {
+  const { funding, goal, numberOfDonations } = project;
+  const completion = (funding / goal) * 100;
+  const remaining = goal - funding;
+
+  return (
+    <Box sx={{ width: '100%', maxWidth: 600 }}>
+      <Typography mb={1} variant="body1">
+        <Typography
+          fontWeight="bold"
+          variant="h4"
+          color="secondary"
+          component="span"
+        >
+          {dollarFormat(funding)}
+        </Typography>{' '}
+        raised out of {dollarFormat(goal)}
+      </Typography>
+
+      <LinearProgress
+        variant="determinate"
+        color="secondary"
+        value={completion}
+        sx={{ height: 12 }}
+      />
+      <Stack justifyContent="space-between" direction="row">
+        <Typography variant="body1">
+          <Typography fontWeight="bold" variant="body1" component="span">
+            {numberOfDonations}
+          </Typography>{' '}
+          donations
+        </Typography>
+
+        <Typography variant="body1">
+          <Typography fontWeight="bold" variant="body1" component="span">
+            {dollarFormat(remaining)}
+          </Typography>{' '}
+          to go
+        </Typography>
+      </Stack>
+    </Box>
+  );
+}
+
+function ProjectStory({ project }) {
+  return (
+    <Stack alignItems="center" spacing={2}>
+      <Stack spacing={0.5}>
+        <Typography variant="h5" component="h3">
+          Summary
+        </Typography>
+        <Typography variant="body1">{project.summary}</Typography>
+      </Stack>
+      <Stack spacing={0.5}>
+        <Typography variant="h5" component="h3">
+          Challenge
+        </Typography>
+        <Typography variant="body1">{project.need}</Typography>
+      </Stack>
+      <Stack spacing={0.5}>
+        <Typography variant="h5" component="h3">
+          Solution
+        </Typography>
+        <Typography variant="body1">{project.activities}</Typography>
+      </Stack>
+      <Stack spacing={0.5}>
+        <Typography variant="h5" component="h3">
+          Long-Term Impact
+        </Typography>
+        <Typography variant="body1">{project.longTermImpact}</Typography>
+      </Stack>
+    </Stack>
   );
 }
 
