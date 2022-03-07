@@ -8,8 +8,10 @@ import {
   Tabs,
   Tab,
   Box,
-  Paper,
+  FormGroup,
   LinearProgress,
+  TextField,
+  Button,
   Grid,
 } from '@mui/material';
 
@@ -25,47 +27,61 @@ function ProjectView() {
   const { data: project, isSuccess, isLoading } = useProject(projectId);
 
   return (
-    <Container disableGutters maxWidth="md">
+    <>
       {isLoading && <CircularProgress />}
 
       {isSuccess && (
-        <Stack alignItems="center" spacing={3}>
-          <Typography
-            color="primary"
-            variant="h4"
-            component="h1"
-            textAlign="center"
-          >
+        <>
+          <Typography variant="h4" component="h1" textAlign="center" mb={8}>
             {project.title}
           </Typography>
 
-          <img src={project.image.imagelink[4].url} alt="" />
+          <Container sx={{ mb: 5 }} disableGutters maxWidth="lg">
+            <Stack
+              spacing={{ xs: 3, md: 5 }}
+              direction={{ xs: 'column-reverse', md: 'row' }}
+              alignItems="center"
+            >
+              <Box sx={{ width: { xs: '100%', maxWidth: 600, md: '40%' } }}>
+                <Stats project={project} />
+                <FormGroup>
+                  <TextField size="small" margin="normal" />
+                  <Button variant="contained">Donate</Button>
+                </FormGroup>
+              </Box>
+              <Box
+                sx={{
+                  boxShadow: {
+                    xs: 'none',
+                    md: '30px 30px #b75d69',
+                  },
+                  width: { xs: '100%', md: '60%' },
+                }}
+                src={project.image.imagelink[4].url}
+                alt=""
+                component="img"
+              />
+            </Stack>
+          </Container>
 
-          <Stats project={project} />
+          <Container disableGutters maxWidth="md">
+            <Stack alignItems="center" spacing={3}>
+              <Tabs value={tabValue} onChange={handleTabChange} centered>
+                <Tab label="Story" />
+                <Tab label="Photos" />
+              </Tabs>
 
-          <Tabs value={tabValue} onChange={handleTabChange} centered>
-            <Tab label="Story" />
-            <Tab label="Photos" />
-          </Tabs>
-
-          <Paper
-            elevation={3}
-            sx={{
-              width: '100%',
-              p: { xs: 2, sm: 3 },
-              py: { xs: 3, sm: 4 },
-            }}
-          >
-            <TabPanel value={tabValue} index={0}>
-              <ProjectStory project={project} />
-            </TabPanel>
-            <TabPanel value={tabValue} index={1}>
-              <ProjectGallery projectId={project.id} />
-            </TabPanel>
-          </Paper>
-        </Stack>
+              <TabPanel value={tabValue} index={0}>
+                <ProjectStory project={project} />
+              </TabPanel>
+              <TabPanel value={tabValue} index={1}>
+                <ProjectGallery projectId={project.id} />
+              </TabPanel>
+            </Stack>
+          </Container>
+        </>
       )}
-    </Container>
+    </>
   );
 }
 
@@ -75,7 +91,7 @@ function Stats({ project }) {
   const remaining = goal - funding;
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 600 }}>
+    <>
       <Typography mb={1} variant="body1">
         <Typography
           fontWeight="bold"
@@ -109,7 +125,7 @@ function Stats({ project }) {
           to go
         </Typography>
       </Stack>
-    </Box>
+    </>
   );
 }
 
@@ -141,25 +157,25 @@ function ProjectStory({ project }) {
   return (
     <Stack alignItems="center" spacing={2}>
       <Stack spacing={0.5}>
-        <Typography variant="h5" component="h3">
+        <Typography variant="h5" fontWeight="bold" component="h3">
           Summary
         </Typography>
         <Typography variant="body1">{project.summary}</Typography>
       </Stack>
       <Stack spacing={0.5}>
-        <Typography variant="h5" component="h3">
+        <Typography variant="h5" fontWeight="bold" component="h3">
           Challenge
         </Typography>
         <Typography variant="body1">{project.need}</Typography>
       </Stack>
       <Stack spacing={0.5}>
-        <Typography variant="h5" component="h3">
+        <Typography variant="h5" fontWeight="bold" component="h3">
           Solution
         </Typography>
         <Typography variant="body1">{project.activities}</Typography>
       </Stack>
       <Stack spacing={0.5}>
-        <Typography variant="h5" component="h3">
+        <Typography variant="h5" fontWeight="bold" component="h3">
           Long-Term Impact
         </Typography>
         <Typography variant="body1">{project.longTermImpact}</Typography>
