@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter as Router } from 'react-router-dom';
 
+import './index.css';
 import App from './App';
 import theme from './theme';
 import reportWebVitals from './reportWebVitals';
@@ -14,7 +16,9 @@ const Root = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <App />
+        <Router>
+          <App />
+        </Router>
       </QueryClientProvider>
     </ThemeProvider>
   );

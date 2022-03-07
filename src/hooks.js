@@ -1,8 +1,19 @@
 import { useState } from 'react';
 import { useInfiniteQuery, useQuery } from 'react-query';
 
-import { fetchProjects, fetchThemes } from './client';
+import {
+  fetchProjects,
+  fetchThemes,
+  fetchSpecificProject,
+  fetchGallery,
+} from './client';
 import { CRITERIA } from './constants';
+
+export const useGallery = (projectId) =>
+  useQuery(`project-${projectId}-gallery`, () => fetchGallery(projectId));
+
+export const useProject = (projectId) =>
+  useQuery(`project-${projectId}`, () => fetchSpecificProject(projectId));
 
 export const useThemes = () => useQuery('themes', fetchThemes);
 

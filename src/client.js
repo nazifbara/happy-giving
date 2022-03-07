@@ -9,6 +9,26 @@ const HEADERS = {
   'content-type': 'application/json',
 };
 
+export async function fetchGallery(projectId) {
+  const { data } = await axios.get(
+    `${BASE_URL}/projects/${projectId}/imagegallery?api_key=${API_KEY}`,
+    {
+      headers: HEADERS,
+    }
+  );
+  return data?.images?.image.slice(1);
+}
+
+export async function fetchSpecificProject(projectId) {
+  const { data } = await axios.get(
+    `${BASE_URL}/projects/${projectId}?api_key=${API_KEY}`,
+    {
+      headers: HEADERS,
+    }
+  );
+  return data?.project;
+}
+
 export async function fetchProjects(
   nextId,
   option = { criterion: CRITERIA.allProjects }
