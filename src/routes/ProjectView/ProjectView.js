@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import {
+  Alert,
+  AlertTitle,
   CircularProgress,
   Container,
   Stack,
@@ -11,6 +13,7 @@ import {
   FormGroup,
   TextField,
   Button,
+  Link,
 } from '@mui/material';
 
 import Stats from './Stats';
@@ -25,10 +28,34 @@ function ProjectView() {
 
   const handleTabChange = (e, newValue) => setTabValue(newValue);
 
-  const { data: project, isSuccess, isLoading } = useProject(projectId);
+  const {
+    data: project,
+    isSuccess,
+    isLoading,
+    isError,
+    error,
+  } = useProject(projectId);
+
+  const isNotFound = error?.message.includes('code 404');
 
   return (
     <>
+      {isNotFound && (
+        <Alert severity="warning">
+          <AlertTitle>Project Not Found</AlertTitle>
+          <Link component={RouterLink} to="/">
+            Return to the home page
+          </Link>
+        </Alert>
+      )}
+
+      {isError && !isNotFound && (
+        <Alert severity="error">
+          <AlertTitle>Unable to fetch the project</AlertTitle>
+          Please refresh the page and try again
+        </Alert>
+      )}
+
       {isLoading && <CircularProgress />}
 
       {isSuccess && (
