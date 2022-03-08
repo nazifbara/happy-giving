@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
 import {
+  InputAdornment,
   Alert,
   AlertTitle,
   CircularProgress,
@@ -14,19 +15,19 @@ import {
   TextField,
   Button,
   Link,
+  IconButton,
 } from '@mui/material';
 
 import Stats from './Stats';
 import Gallery from './Gallery';
 import Story from './Story';
 import { TabPanel } from '../../components';
-import { useProject } from '../../hooks';
+import { useProject, useCart } from '../../hooks';
 
 function ProjectView() {
   const { projectId } = useParams();
   const [tabValue, setTabValue] = useState(0);
-
-  const handleTabChange = (e, newValue) => setTabValue(newValue);
+  const [amount, setAmount] = useState('10');
 
   const {
     data: project,
@@ -35,8 +36,30 @@ function ProjectView() {
     isError,
     error,
   } = useProject(projectId);
+  const { addItem } = useCart();
+  const navigate = useNavigate();
 
   const isNotFound = error?.message.includes('code 404');
+
+  const handleTabChange = (e, newValue) => setTabValue(newValue);
+  const handleAmoutChange = (e) => {
+    const regex = new RegExp(/^\d+$/);
+    const value = e.target.value;
+
+    if (!regex.test(value) && value !== '') {
+      return;
+    }
+
+    setAmount(value);
+  };
+  const donate = (e) => {
+    e.preventDefault();
+    if (amount === '' || amount === '0') {
+      return;
+    }
+    addItem(project, amount);
+    navigate('/checkout');
+  };
 
   return (
     <>
@@ -72,10 +95,29 @@ function ProjectView() {
             >
               <Box sx={{ width: { xs: '100%', maxWidth: 600, md: '40%' } }}>
                 <Stats project={project} />
-                <FormGroup>
-                  <TextField size="small" margin="normal" />
-                  <Button variant="contained">Donate</Button>
-                </FormGroup>
+                <form onSubmit={donate}>
+                  <FormGroup>
+                    <TextField
+                      type="text"
+                      value={amount}
+                      onChange={handleAmoutChange}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton size="small">$</IconButton>
+                          </InputAdornment>
+                        ),
+                        inputMode: 'numeric',
+                        pattern: '[0-9]*',
+                      }}
+                      size="small"
+                      margin="normal"
+                    />
+                    <Button type="submit" variant="contained">
+                      Donate
+                    </Button>
+                  </FormGroup>
+                </form>
               </Box>
               <Box
                 sx={{
