@@ -4,18 +4,14 @@ import {
   CardMedia,
   CardContent,
   Typography,
-  Link,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+
+import { Link } from '../components';
 
 const ProjectCard = ({ project }) => (
   <CardActionArea sx={{ height: '100%' }}>
     <Card sx={{ bgcolor: 'background.default', height: '100%' }}>
-      <Link
-        component={RouterLink}
-        underline="none"
-        to={`/project/${project.id}`}
-      >
+      <Link underline="none" to={`/project/${project.id}`}>
         <CardMedia
           component="img"
           height="140"
