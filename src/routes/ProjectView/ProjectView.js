@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   InputAdornment,
   Alert,
@@ -14,14 +14,13 @@ import {
   FormGroup,
   TextField,
   Button,
-  Link,
   IconButton,
 } from '@mui/material';
 
 import Stats from './Stats';
 import Gallery from './Gallery';
 import Story from './Story';
-import { TabPanel } from '../../components';
+import { TabPanel, Link } from '../../components';
 import { useProject, useCart } from '../../hooks';
 
 function ProjectView() {
@@ -66,9 +65,7 @@ function ProjectView() {
       {isNotFound && (
         <Alert severity="warning">
           <AlertTitle>Project Not Found</AlertTitle>
-          <Link component={RouterLink} to="/">
-            Return to the home page
-          </Link>
+          <Link to="/">Return to the home page</Link>
         </Alert>
       )}
 

@@ -22,14 +22,28 @@ export const CartProvider = (props) => {
     ]);
   };
 
-  const isInCart = (product) => Boolean(findItem(product));
+  const removeItem = (project) => {
+    const index = findItemIndex(project);
+    setProjects((s) => [...s.slice(0, index), ...s.slice(index + 1)]);
+  };
 
-  const findItem = (product) => projects.find((p) => p.id === product.id);
+  const getTotal = () =>
+    projects.reduce((total, project) => total + Number(project.amount), 0);
+
+  const isInCart = (project) => Boolean(findItem(project));
+
+  const findItem = (project) => projects.find((p) => p.id === project.id);
+
+  const findItemIndex = (project) =>
+    projects.findIndex((p) => p.id === project.id);
 
   return (
     <CartContext.Provider
       value={{
+        getTotal,
         addItem,
+        removeItem,
+        isEmpty: projects.length === 0,
         isInCart,
         cartItems: projects,
       }}
